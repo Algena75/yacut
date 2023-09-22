@@ -11,7 +11,7 @@ def index_view():
     form = AddURLForm()
     if form.validate_on_submit():
         original_link = form.original_link.data
-        if form.custom_id.data is not None and form.custom_id.data != '':
+        if form.custom_id.data and form.custom_id.data.strip() != '':
             short_url = form.custom_id.data
             if URLMap.query.filter_by(short=short_url).first() is not None:
                 flash(f'Имя {short_url} уже занято!')

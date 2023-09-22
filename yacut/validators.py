@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import re
 
 from .error_handlers import InvalidAPIUsage
@@ -53,17 +54,12 @@ def validate_custom_id(short_id):
     if len(short_id) > 16:
         raise InvalidAPIUsage(
             'Указано недопустимое имя для короткой ссылки',
-            400
+            status_code=HTTPStatus.BAD_REQUEST
         )
-
-    #if [letter for letter in short_id] not in array:
-    #    raise InvalidAPIUsage(
-    #        'Указано недопустимое имя для короткой ссылки'
-    #    )
     for letter in short_id:
         if letter not in ARRAY:
             raise InvalidAPIUsage(
                 'Указано недопустимое имя для короткой ссылки',
-                status_code=400
+                status_code=HTTPStatus.BAD_REQUEST
             )
     return short_id

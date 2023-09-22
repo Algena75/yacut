@@ -1,4 +1,6 @@
 from flask import jsonify, request
+from http import HTTPStatus
+from urllib.parse import urljoin
 
 from . import app, db
 from .error_handlers import InvalidAPIUsage
@@ -15,12 +17,8 @@ def add_record():
     if 'url' not in data:
         raise InvalidAPIUsage('\"url\" является обязательным полем!')
     url = validate_url(data['url'])
-    if (
-        'custom_id' in data and
-        data['custom_id'] != '' and
-        data['custom_id'] is not None
-    ):
-        short_id = validate_custom_id(data['custom_id'])
+    if data.get('custom_id'):
+        short_id = validate_custom_id(data.get('custom_id'))
         if URLMap.query.filter_by(short=short_id).first() is not None:
             raise InvalidAPIUsage(f'Имя "{short_id}" уже занято.')
     else:
@@ -33,13 +31,13 @@ def add_record():
     db.session.commit()
     return jsonify({
         'url': url,
-        'short_link': 'http://localhost/' + short_id
-    }), 201
+        'short_link': urljoin('http://localhost/', short_id)
+    }), HTTPStatus.CREATED
 
 
 @app.route('/api/id/<short_id>/', methods=['GET'])
 def get_url(short_id):
     record = URLMap.query.filter_by(short=short_id).first()
     if record is None:
-        raise InvalidAPIUsage('Указанный id не найден', 404)
-    return jsonify({'url': record.original}), 200
+        raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
+    return jsonify({'url': record.original}), HTTPStatus.OK
