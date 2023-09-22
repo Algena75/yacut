@@ -2,8 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
-
 PATTERN = r'^[0-9A-Za-z]+$'
+
 
 class AddURLForm(FlaskForm):
     original_link = URLField(

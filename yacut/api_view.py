@@ -1,6 +1,7 @@
-from flask import jsonify, request
 from http import HTTPStatus
 from urllib.parse import urljoin
+
+from flask import jsonify, request
 
 from . import app, db
 from .error_handlers import InvalidAPIUsage

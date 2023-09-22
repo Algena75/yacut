@@ -1,5 +1,5 @@
-from http import HTTPStatus
 import re
+from http import HTTPStatus
 
 from .error_handlers import InvalidAPIUsage
 from .utils import ARRAY
